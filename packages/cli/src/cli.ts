@@ -32,7 +32,7 @@ program
         const quality = opts.quality;
         const swizzle = opts.swizzle;
         logger.info(`Converting ${input} to ${output} with quality ${quality} and swizzle ${swizzle}`);
-        await convertFormat(input, output, swizzle, quality);
+        await format(input, output, swizzle, quality);
     });
 
 // PACK
@@ -96,5 +96,40 @@ program
         const to = opts.to;
 
         logger.info(`Converting ${input} (${from}) to ${output} (${to}) with quality ${quality}`);
-        await convertRole(input, from, output, to, quality);
+        await role(input, from, output, to, quality);
+    });
+
+
+// ROLE
+program
+	.command('resize', 'Resize images')
+	.help("Change the size of the image")
+	.argument('<input>', INPUT_IMAGE)
+	.argument('<output>', OUTPUT_IMAGE)
+	.option('--quality <integer>', 'The quality of the result in percent', {
+        validator: program.NUMBER,
+        default: 100
+    })
+    .option('--width <integer>', 'The width of the resized image.', {
+		validator: program.NUMBER,
+        required: true
+	})
+    .option('--height <integer>', 'The height of the resized image.', {
+		validator: program.NUMBER,
+        required: true
+	})
+    .action( async ({ args, options, logger }) => {
+        const opts = options as {
+            quality: number;
+            from: string;
+            to: string;
+        };
+        const input = args.input;
+        const output = args.output;
+        const quality = opts.quality;
+        const from = opts.from;
+        const to = opts.to;
+
+        logger.info(`Converting ${input} (${from}) to ${output} (${to}) with quality ${quality}`);
+        await role(input, from, output, to, quality);
     });

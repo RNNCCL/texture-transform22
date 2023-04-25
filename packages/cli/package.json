@@ -13,6 +13,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@caporal/core": "^2.0.2"
+    "@caporal/core": "^2.0.2",
+    "@mtc/core": "*"
   }
 }
