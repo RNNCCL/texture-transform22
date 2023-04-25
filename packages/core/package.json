@@ -1,0 +1,18 @@
+{
+  "name": "@mtc/core",
+  "version": "1.0.0",
+  "description": "A set of tools for converting between different 3D shader material textures",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js"
+ },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@caporal/core": "^2.0.2"
+  }
+}

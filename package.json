@@ -1,14 +1,15 @@
 {
-  "name": "material-texture-converter",
+  "name": "mtc",
   "version": "1.0.0",
   "description": "A set of tools for converting between different 3D shader material textures",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.0.4"
-  }
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "start": "npm run start --workspace=packages/cli"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
