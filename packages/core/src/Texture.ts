@@ -9,14 +9,30 @@ export type Texture = {
   width: number;
   height: number;
   channels: number;
-  data: Uint8Array;
+  data: Float32Array;
 };
+
+export function uint8ToFloatArray( uint8Array: Uint8Array ): Float32Array {
+  const floatArray = new Float32Array( uint8Array.length );
+  for ( let i = 0; i < uint8Array.length; i++ ) {
+    floatArray[i] = uint8Array[i] / 255;
+  }
+  return floatArray;
+}
+
+export function floatToUint8Array( floatArray: Float32Array ): Uint8Array {
+  const uint8Array = new Uint8Array( floatArray.length );
+  for ( let i = 0; i < floatArray.length; i++ ) {
+    uint8Array[i] = floatArray[i] * 255;
+  }
+  return uint8Array;
+}
 
 export function createTexture(
   width: number,
   height: number,
   channels: number,
-  data = new Uint8Array(width * height * channels)
+  data = new Float32Array(width * height * channels)
 ): Texture {
   // TODO: ensure width and height are >= 1
   // TODO: ensure channels is >= 1 && <= 4
@@ -32,8 +48,8 @@ export function getTexturePixel(
   texture: Texture,
   x: number,
   y: number,
-  result = new Uint8Array(this.channels)
-): Uint8Array {
+  result = new Float32Array(this.channels)
+): Float32Array {
   const index = getTexturePixelOffset(texture, x, y);
   for (let i = 0; i < this.channels; i++) {
     result[i] = texture.data[index + i];
@@ -44,7 +60,7 @@ export function setTexturePixel(
   texture: Texture,
   x: number,
   y: number,
-  value: Uint8Array
+  value: Float32Array
 ): void {
   const index = getTexturePixelOffset(texture, x, y);
   for (let i = 0; i < this.channels; i++) {
@@ -56,7 +72,7 @@ export function textureIterator(
   texture: Texture,
   iterator: (x: number, y: number) => void
 ): void {
-  const result = new Uint8Array(texture.channels);
+  const result = new Float32Array(texture.channels);
   for (let y = 0; y < texture.height; y++) {
     for (let x = 0; x < texture.width; x++) {
       iterator(x, y);
@@ -74,8 +90,8 @@ export function copyTextureChannel(
   // TODO: ensure dest channel is within range
   // TODO: ensure source and dest textures are the same size.
 
-  const sourcePixel = new Uint8Array(sourceTexture.channels);
-  const destinationPixel = new Uint8Array(destinationTexture.channels);
+  const sourcePixel = new Float32Array(sourceTexture.channels);
+  const destinationPixel = new Float32Array(destinationTexture.channels);
 
   textureIterator(sourceTexture, (x, y) => {
     getTexturePixel(sourceTexture, x, y, sourcePixel);
@@ -114,7 +130,7 @@ export function createTextureFromChannels(...channels: Texture[]): Texture {
   const height = channels[0].height;
   const result = createTexture(width, height, channels.length);
 
-  const pixel = new Uint8Array(channels.length);
+  const pixel = new Float32Array(channels.length);
   textureIterator(result, (x, y) => {
     for (let i = 0; i < channels.length; i++) {
       getTexturePixel(channels[i], x, y, pixel);

@@ -131,5 +131,5 @@ program
         const to = opts.to;
 
         logger.info(`Converting ${input} (${from}) to ${output} (${to}) with quality ${quality}`);
-        await role(input, from, output, to, quality);
+        await resize(input, from, output, to, quality);
     });

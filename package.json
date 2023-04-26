@@ -1,5 +1,5 @@
 {
-  "name": "mtc",
+  "name": "texture-transform",
   "version": "1.0.0",
   "description": "A set of tools for converting between different 3D shader material textures",
   "main": "index.js",
