@@ -7,14 +7,19 @@ import {
   textureIterator,
 } from "../../Texture";
 import { normalToColor3 } from "./helpers";
+import { assert } from "../../helpers/assert";
 
 export function bumpToNormalMap(
   bumpTexture: Texture,
   strength = 1.0,
   normalTexture = createTexture(bumpTexture.width, bumpTexture.height, 3)
 ): Texture {
+  assert(bumpTexture.channels === 1, "bumpTexture.channels === 1");
+  assert(normalTexture.channels === 3, "normalTexture.channels === 3");
+
   const tempVec = new Vec3();
-  const tempColor = new Color3();
+  const normal = new Vec3();
+  const normalColor = new Color3();
 
   const upPixel = new Float32Array(1);
   const downPixel = new Float32Array(1);
@@ -35,15 +40,12 @@ export function bumpToNormalMap(
     const dy = (upPixel[0] - downPixel[0]) * strength;
 
     // Calculate the normal vector and normalize it
-    const normal = vec3Normalize(tempVec.set(dx, dy, 1));
-    const color = normalToColor3(normal, tempColor);
-    normalPixel[0] = color.r;
-    normalPixel[1] = color.g;
-    normalPixel[2] = color.b;
-    normalPixel[3] = 1;
+    normal.set(dx, dy, 1);
+    vec3Normalize(normal, normal);
+    normalToColor3(normal, normalColor);
 
     // Store the normal vector in the normal map data
-    setTexturePixel(normalTexture, y, x, normalPixel);
+    setTexturePixel(normalTexture, y, x, normalColor);
   });
 
   return normalTexture;

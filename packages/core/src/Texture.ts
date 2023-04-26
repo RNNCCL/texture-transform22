@@ -1,3 +1,6 @@
+import { Color3, Color4 } from "@threeify/math";
+import { assert } from "./helpers/assert";
+
 export enum Channel {
   R = 0,
   G = 1,
@@ -12,20 +15,21 @@ export type Texture = {
   data: Float32Array;
 };
 
-export function uint8ToFloatArray( uint8Array: Uint8Array ): Float32Array {
-  const floatArray = new Float32Array( uint8Array.length );
-  for ( let i = 0; i < uint8Array.length; i++ ) {
-    floatArray[i] = uint8Array[i] / 255;
+export type Pixel = Color3 | Color4 | Float32Array | number[];
+
+
+export function uint8ToFloatArray(uint8Array: Uint8Array, result = new Float32Array( uint8Array.length )): Float32Array {
+  for (let i = 0; i < uint8Array.length; i++) {
+    result[i] = uint8Array[i] / 255.0;
   }
-  return floatArray;
+  return result;
 }
 
-export function floatToUint8Array( floatArray: Float32Array ): Uint8Array {
-  const uint8Array = new Uint8Array( floatArray.length );
-  for ( let i = 0; i < floatArray.length; i++ ) {
-    uint8Array[i] = floatArray[i] * 255;
+export function floatToUint8Array(floatArray: Float32Array, result = new Uint8Array( floatArray.length )): Uint8Array {
+  for (let i = 0; i < floatArray.length; i++) {
+    result[i] = clamp( floatArray[i] * 255, 0.0, 255.0); // is this correct?  Do I have to take rounding into account?
   }
-  return uint8Array;
+  return result;
 }
 
 export function createTexture(
@@ -34,13 +38,20 @@ export function createTexture(
   channels: number,
   data = new Float32Array(width * height * channels)
 ): Texture {
-  // TODO: ensure width and height are >= 1
-  // TODO: ensure channels is >= 1 && <= 4
-  // TODO: ensure data is the right length for width, height, and channels
+  assert(width >= 1, "width must be >= 1");
+  assert(height >= 1, "height must be >= 1");
+  assert(channels >= 1 && channels <= 4, "channels must be >= 1 && <= 4");
+  assert(
+    data.length === width * height * channels,
+    "data must be the right length for width, height, and channels"
+  );
+
   return { width, height, channels, data };
 }
 
 function getTexturePixelOffset(texture: Texture, x: number, y: number): number {
+  assert(x >= 0 && x < texture.width, "x must be >= 0 && < texture.width");
+  assert(y >= 0 && y < texture.height, "y must be >= 0 && < texture.height");
   return (y * texture.width + x) * texture.channels;
 }
 
@@ -48,23 +59,81 @@ export function getTexturePixel(
   texture: Texture,
   x: number,
   y: number,
-  result = new Float32Array(this.channels)
-): Float32Array {
+  result: Pixel
+) {
   const index = getTexturePixelOffset(texture, x, y);
-  for (let i = 0; i < this.channels; i++) {
-    result[i] = texture.data[index + i];
+
+  if (result instanceof Float32Array || result instanceof Array) {
+    assert(
+      result.length === texture.channels,
+      "result array must be the same length as the number of channels in the texture"
+    );
+    for (let i = 0; i < this.channels; i++) {
+      result[i] = texture.data[index + i];
+    }
+  } else if (result instanceof Color3) {
+    assert(
+      texture.channels === 3,
+      "texture must have 3 channels to get a Color3"
+    );
+    result.set(
+      texture.data[index],
+      texture.data[index + 1],
+      texture.data[index + 2]
+    );
+  } else if (result instanceof Color4) {
+    assert(
+      texture.channels === 4,
+      "texture must have 4 channels to get a Color4"
+    );
+    result.set(
+      texture.data[index],
+      texture.data[index + 1],
+      texture.data[index + 2],
+      texture.data[index + 3]
+    );
+  } else {
+    throw new Error(
+      `result must be a Float32Array, Color3, Color4, or number, but it is ${typeof result}`
+    );
   }
-  return result;
 }
 export function setTexturePixel(
   texture: Texture,
   x: number,
   y: number,
-  value: Float32Array
+  value: Pixel
 ): void {
   const index = getTexturePixelOffset(texture, x, y);
-  for (let i = 0; i < this.channels; i++) {
-    texture.data[index + i] = value[i];
+  if (value instanceof Float32Array || value instanceof Array) {
+    assert(
+      value.length === texture.channels,
+      "value array must be the same length as the number of channels in the texture"
+    );
+    for (let i = 0; i < this.channels; i++) {
+      texture.data[index + i] = value[i];
+    }
+  } else if (value instanceof Color3) {
+    assert(
+      texture.channels === 3,
+      "texture must have 3 channels to set a Color3"
+    );
+    texture.data[index] = value.r;
+    texture.data[index + 1] = value.g;
+    texture.data[index + 2] = value.b;
+  } else if (value instanceof Color4) {
+    assert(
+      texture.channels === 4,
+      "texture must have 4 channels to set a Color4"
+    );
+    texture.data[index] = value.r;
+    texture.data[index + 1] = value.g;
+    texture.data[index + 2] = value.b;
+    texture.data[index + 3] = value.a;
+  } else {
+    throw new Error(
+      `value must be a Float32Array, Color3, Color4, or number, but it is ${typeof value}`
+    );
   }
 }
 
@@ -86,9 +155,23 @@ export function copyTextureChannel(
   destinationTexture: Texture,
   destinationChannel: Channel
 ): Texture {
-  // TODO: ensure source channel is within range.
-  // TODO: ensure dest channel is within range
-  // TODO: ensure source and dest textures are the same size.
+  assert(
+    sourceChannel >= 0 && sourceChannel < sourceTexture.channels,
+    "source channel must be >= 0 && < sourceTexture.channels"
+  );
+  assert(
+    destinationChannel >= 0 && destinationChannel < destinationTexture.channels,
+    "destination channel must be >= 0 && < destinationTexture.channels"
+  );
+
+  assert(
+    sourceTexture.width === destinationTexture.width,
+    "source and destination textures must have the same width"
+  );
+  assert(
+    sourceTexture.height === destinationTexture.height,
+    "source and destination textures must have the same height"
+  );
 
   const sourcePixel = new Float32Array(sourceTexture.channels);
   const destinationPixel = new Float32Array(destinationTexture.channels);
@@ -106,7 +189,11 @@ export function extractTextureChannel(
   sourceTexture: Texture,
   sourceChannel: Channel
 ): Texture {
-  // TODO: ensure source channel is within range.
+  assert(
+    sourceChannel >= 0 && sourceChannel < sourceTexture.channels,
+    "source channel must be >= 0 && < sourceTexture.channels"
+  );
+
   const destinationTexture = createTexture(
     sourceTexture.width,
     sourceTexture.height,
