@@ -6,10 +6,7 @@ import {
 } from '@threeify/math';
 
 import { assert } from '../../helpers/assert';
-import {
-  color3LinearToLuma,
-  color3MaxComponent
-} from '../../helpers/Color3';
+import { color3LinearToLuma, color3MaxComponent } from '../../helpers/Color3';
 import {
   createTexture,
   getTexturePixel,

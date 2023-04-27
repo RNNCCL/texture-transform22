@@ -8,7 +8,7 @@ import {
   Texture,
   textureIterator
 } from '../../Texture';
-import { normalToColor3 } from './helpers';
+import { normalToColor3 } from '../../helpers/Color3';
 
 export function bumpToNormalMap(
   bumpTexture: Texture,

@@ -1,4 +1,4 @@
-import { Color3, Color4 } from '@threeify/math';
+import { clamp, Color3, Color4 } from '@threeify/math';
 
 import { assert } from './helpers/assert';
 
@@ -9,10 +9,12 @@ export enum Channel {
   A = 3
 }
 
+export type Channels = 1 | 2 | 3 | 4;
+
 export type Texture = {
   width: number;
   height: number;
-  channels: number;
+  channels: Channels;
   data: Float32Array;
 };
 
@@ -41,7 +43,7 @@ export function floatToUint8Array(
 export function createTexture(
   width: number,
   height: number,
-  channels: number,
+  channels: Channels,
   data = new Float32Array(width * height * channels)
 ): Texture {
   assert(width >= 1, 'width must be >= 1');
@@ -147,7 +149,6 @@ export function textureIterator(
   texture: Texture,
   iterator: (x: number, y: number) => void
 ): void {
-  const result = new Float32Array(texture.channels);
   for (let y = 0; y < texture.height; y++) {
     for (let x = 0; x < texture.width; x++) {
       iterator(x, y);
@@ -215,13 +216,19 @@ export function extractTextureChannel(
 }
 
 export function createTextureFromChannels(...channels: Texture[]): Texture {
-  // TODO: ensure all channels are the same size.
-  // TODO: ensure there are no more than 4 channels.
-  // TODO: ensure that all channels only have a single channel
+  assert(channels.length > 0, 'must have at least one channel');
+  assert(channels.length <= 4, 'must have no more than 4 channels');
 
   const width = channels[0].width;
   const height = channels[0].height;
-  const result = createTexture(width, height, channels.length);
+
+  for (const channel of channels) {
+    assert(channel.width === width, 'all channels must have the same width');
+    assert(channel.height === height, 'all channels must have the same height');
+    assert(channel.channels === 1, 'all channels must have only one channel');
+  }
+
+  const result = createTexture(width, height, channels.length as Channels);
 
   const pixel = new Float32Array(channels.length);
   textureIterator(result, (x, y) => {

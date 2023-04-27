@@ -29,10 +29,18 @@ export async function resolveTexture(directory: string, roles: string[]) {
     return false;
   });
   if (matchingFiles.length === 0) {
-    throw new Error(`Could not find a ${role} texture in ${directory}`);
+    throw new Error(
+      `Could not find a texture in ${directory} for any of the roles: ${roles.join(
+        ', '
+      )}`
+    );
   }
   if (matchingFiles.length > 1) {
-    throw new Error(`Found multiple ${role} textures in ${directory}`);
+    throw new Error(
+      `Found multiple textures in ${directory} for the roles: ${roles.join(
+        ', '
+      )}`
+    );
   }
 
   const file = matchingFiles[0];

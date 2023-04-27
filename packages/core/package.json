@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@caporal/core": "^2.0.2",
-    "@threeify/math": "^4.0.1"
+    "@threeify/math": "^4.0.1",
+    "sharp": "^0.32.0"
   }
 }

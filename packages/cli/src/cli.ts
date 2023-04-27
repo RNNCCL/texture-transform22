@@ -1,11 +1,13 @@
 import caporal from '@caporal/core';
-
 import {
-  resolveTextureLocation,
+  readTexture,
+  writeTexture,
   remapTextureLocation,
-  loadTexture,
+  resolveTextureLocation,
   saveTexture,
-  specGlossToMetalRough
+  specGlossToMetalRough,
+  Texture,
+  TextureLocation
 } from '@texture-transform/core';
 
 const program = caporal.program;
@@ -63,19 +65,19 @@ program
     ]);
 
     const [diffuseLocation, specularLocation, glossinessLocation] =
-      await Promise.allSettled([
+      (await Promise.all([
         diffuseLocationPromise,
         specularLocationPromise,
         glossinessLocationPromise
-      ]);
+      ])) as TextureLocation[];
 
     logger.log(`Loading textures`);
     const [diffuseTexture, specularTexture, glossinessTexture] =
-      await Promise.allSettled([
-        loadTexture(diffuseLocation.path),
-        loadTexture(specularLocation.path),
-        loadTexture(glossinessLocation.path)
-      ]);
+      (await Promise.all([
+        readTexture(diffuseLocation.path),
+        readTexture(specularLocation.path),
+        readTexture(glossinessLocation.path)
+      ])) as Texture[];
 
     logger.log(`Converting textures`);
     const { baseTexture, metallicTexture, roughnessTexture } =
@@ -104,8 +106,8 @@ program
     logger.log(`Saving textures`);
 
     await Promise.all([
-      saveTexture(baseTexture, baseLocation.path, quality),
-      saveTexture(metallicTexture, metallicLocation.path, quality),
-      saveTexture(roughnessTexture, roughnessLocation.path, quality)
+      writeTexture(baseTexture, baseLocation.path, quality),
+      writeTexture(metallicTexture, metallicLocation.path, quality),
+      writeTexture(roughnessTexture, roughnessLocation.path, quality)
     ]);
   });
