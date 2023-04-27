@@ -1,13 +1,12 @@
 import caporal from '@caporal/core';
 import {
   readTexture,
-  writeTexture,
   remapTextureLocation,
   resolveTextureLocation,
-  saveTexture,
   specGlossToMetalRough,
   Texture,
-  TextureLocation
+  TextureLocation,
+  writeTexture
 } from '@texture-transform/core';
 
 const program = caporal.program;
@@ -43,15 +42,15 @@ program
       from: string;
       to: string;
     };
-    const inputDirectory = args.input_directory;
-    const outputDirectory = args.output_directory;
-    const quality = opts.quality;
+    const inputDirectory = args.input_directory as string;
+    const outputDirectory = args.output_directory as string;
+    const quality = opts.quality as number;
 
     logger.info(
       `Converting spec-gloss from ${inputDirectory} to PBR in ${outputDirectory} with quality ${quality}`
     );
 
-    logger.log(`Resolving textures`);
+    logger.info(`Resolving textures`);
     const diffuseLocationPromise = resolveTextureLocation(inputDirectory, [
       'diffuse'
     ]);
@@ -71,7 +70,7 @@ program
         glossinessLocationPromise
       ])) as TextureLocation[];
 
-    logger.log(`Loading textures`);
+    logger.info(`Loading textures`);
     const [diffuseTexture, specularTexture, glossinessTexture] =
       (await Promise.all([
         readTexture(diffuseLocation.path),
@@ -79,13 +78,9 @@ program
         readTexture(glossinessLocation.path)
       ])) as Texture[];
 
-    logger.log(`Converting textures`);
+    logger.info(`Converting textures`);
     const { baseTexture, metallicTexture, roughnessTexture } =
-      await specGlossToMetalRough(
-        diffuseTexture,
-        specularTexture,
-        glossinessTexture
-      );
+      specGlossToMetalRough(diffuseTexture, specularTexture, glossinessTexture);
 
     const baseLocation = remapTextureLocation(
       diffuseLocation,
@@ -103,7 +98,7 @@ program
       'roughness'
     );
 
-    logger.log(`Saving textures`);
+    logger.info(`Saving textures`);
 
     await Promise.all([
       writeTexture(baseTexture, baseLocation.path, quality),

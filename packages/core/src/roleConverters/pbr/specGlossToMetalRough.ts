@@ -38,7 +38,7 @@ function solveMetallic(
   return THREE.Math.clamp((-b + Math.sqrt(D)) / (2 * a), 0, 1);
 }
 
-export function pbrToSpecularGlossiness(
+export function specGlossToMetalRough(
   diffuseTexture: Texture,
   specularTexture: Texture,
   glossinessTexture: Texture,

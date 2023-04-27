@@ -1,6 +1,7 @@
 import { Color3, Vec3, vec3Normalize } from '@threeify/math';
 
 import { assert } from '../../helpers/assert';
+import { normalToColor3 } from '../../helpers/Color3';
 import {
   createTexture,
   getTexturePixel,
@@ -8,7 +9,6 @@ import {
   Texture,
   textureIterator
 } from '../../Texture';
-import { normalToColor3 } from '../../helpers/Color3';
 
 export function bumpToNormalMap(
   bumpTexture: Texture,

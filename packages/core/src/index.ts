@@ -1,4 +1,3 @@
-
 export * from './Texture';
 export * from './io/TextureLocation';
 export * from './io/TextureIO';

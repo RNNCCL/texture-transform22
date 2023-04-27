@@ -12,7 +12,10 @@ export type TextureLocation = {
 // search the directory for a file with the postfix, before the extension of "role"
 // if it exists, returns a TextureLocation with all the details
 // otherwise this function throws an exception
-export async function resolveTexture(directory: string, roles: string[]) {
+export async function resolveTextureLocation(
+  directory: string,
+  roles: string[]
+) {
   // check if directory exists
   await fsPromises.access(directory, fsPromises.constants.R_OK);
 
