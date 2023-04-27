@@ -1,7 +1,7 @@
 import { Color3, color3Lerp, color3MultiplyByScalar } from '@threeify/math';
 
 import { assert } from '../../helpers/assert';
-import { color3MaxComponent } from '../../helpers/Color3.Helpers';
+import { color3MaxComponent } from '../../helpers/Color3';
 import {
   createTexture,
   getTexturePixel,
@@ -19,7 +19,7 @@ const epsilon = 1e-6;
 
 // TODO: Add support for specular texture as well.
 
-export function pbrToSpecularGlossiness(
+export function metalRoughToSpecGloss(
   baseTexture: Texture,
   metallicTexture: Texture,
   roughnessTexture: Texture,

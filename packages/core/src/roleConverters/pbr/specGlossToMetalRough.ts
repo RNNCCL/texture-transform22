@@ -9,7 +9,7 @@ import { assert } from '../../helpers/assert';
 import {
   color3LinearToLuma,
   color3MaxComponent
-} from '../../helpers/Color3.Helpers';
+} from '../../helpers/Color3';
 import {
   createTexture,
   getTexturePixel,

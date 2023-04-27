@@ -30,5 +30,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@types/node": "^18.16.1"
+  }
 }

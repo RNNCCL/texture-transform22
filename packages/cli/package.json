@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@caporal/core": "^2.0.2",
-    "@texture-transform/core": "*"
+    "@texture-transform/core": "*",
+    "@types/node": "^18.16.1"
   }
 }
