@@ -1,5 +1,6 @@
-import { Color3, Vec3, clamp } from "@threeify/math";
-import { saturate } from "./Math.Helpers";
+import { clamp, Color3, Vec3 } from '@threeify/math';
+
+import { saturate } from './math';
 
 // ====================
 // ====================
@@ -87,9 +88,8 @@ export function color3Saturate(color: Color3, result = new Color3()): Color3 {
   return result.set(saturate(color.r), saturate(color.g), saturate(color.b));
 }
 
-
 // ====================
 
-export function color3MaxComponent( color: Color3 ): number {
-  return Math.max( color.r, color.g, color.b );
+export function color3MaxComponent(color: Color3): number {
+  return Math.max(color.r, color.g, color.b);
 }

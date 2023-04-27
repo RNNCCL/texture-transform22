@@ -1,21 +1,22 @@
-import { vec3Normalize, Vec3, Color3 } from "@threeify/math";
+import { Color3, Vec3, vec3Normalize } from '@threeify/math';
+
+import { assert } from '../../helpers/assert';
+import { normalToColor3 } from '../../helpers/Color3';
 import {
-  Texture,
   createTexture,
   getTexturePixel,
   setTexturePixel,
-  textureIterator,
-} from "../../Texture";
-import { normalToColor3 } from "./helpers";
-import { assert } from "../../helpers/assert";
+  Texture,
+  textureIterator
+} from '../../Texture';
 
 export function bumpToNormalMap(
   bumpTexture: Texture,
-  strength = 1.0,
+  strength = 1,
   normalTexture = createTexture(bumpTexture.width, bumpTexture.height, 3)
 ): Texture {
-  assert(bumpTexture.channels === 1, "bumpTexture.channels === 1");
-  assert(normalTexture.channels === 3, "normalTexture.channels === 3");
+  assert(bumpTexture.channels === 1, 'bumpTexture.channels === 1');
+  assert(normalTexture.channels === 3, 'normalTexture.channels === 3');
 
   const tempVec = new Vec3();
   const normal = new Vec3();
