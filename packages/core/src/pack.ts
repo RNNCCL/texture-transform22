@@ -1,4 +1,6 @@
-
-export async function pack(inputs: string[], swizzles: string[], output: string, quality: number ) {
-    
-}
+export async function pack(
+  inputs: string[],
+  swizzles: string[],
+  output: string,
+  quality: number
+) {}
