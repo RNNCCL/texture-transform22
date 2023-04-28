@@ -1,2 +1,5 @@
-# material-texture-converter
-A set of tools for converting between different 3D shader material textures
+# Texture-Transform
+
+A command line tool that can be used to convert classic Diffuse-Specular-Glossiness textures to the more common Base-Metallic-Roughness format.
+
+
