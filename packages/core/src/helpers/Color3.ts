@@ -1,6 +1,6 @@
 import { clamp, Color3, Vec3 } from '@threeify/math';
 
-import { saturate } from './math';
+import { saturate } from './math.js';
 
 // ====================
 // ====================

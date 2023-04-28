@@ -1,6 +1,7 @@
 {
   "name": "@texture-transform/core",
   "version": "1.0.0",
+  "type": "module",
   "description": "A set of tools for converting between different 3D shader material textures",
   "main": "dist/index.js",
   "scripts": {

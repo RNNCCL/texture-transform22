@@ -1,6 +1,6 @@
 import { clamp, Color3, Color4 } from '@threeify/math';
 
-import { assert } from './helpers/assert';
+import { assert } from './helpers/assert.js';
 
 export enum Channel {
   R = 0,

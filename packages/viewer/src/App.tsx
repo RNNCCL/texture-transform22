@@ -14,8 +14,7 @@ import {
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 
 function App() {
-  const { scene } = useGLTF("./Purse.glb");
-  const [gltfBoundingRadius, setGltfBoundingRadius] = useState(1.0);
+  const [sceneBoundingRadius, setSceneBoundingRadius] = useState(1.0);
 
   const [materialName, setMaterialName] = useState("test");
 
@@ -64,8 +63,8 @@ function App() {
         autoRotateSpeed={0.0}
         enableDamping={true}
         enableZoom={true}
-        minDistance={gltfBoundingRadius}
-        maxDistance={2 * gltfBoundingRadius}
+        minDistance={sceneBoundingRadius}
+        maxDistance={2 * sceneBoundingRadius}
       />
 
       <Center
@@ -75,7 +74,7 @@ function App() {
             "props.boundingSphere.radius",
             props.boundingSphere.radius
           );
-          setGltfBoundingRadius( props.boundingSphere.radius );
+          setSceneBoundingRadius( props.boundingSphere.radius );
         }}
       >
         <pointLight position={[0, 10, -10]} intensity={10} />
@@ -92,6 +91,5 @@ function App() {
   );
 }
 
-useGLTF.preload("./Purse.glb");
 
 export default App;
