@@ -2,13 +2,13 @@ import path from 'node:path';
 
 import sharp from 'sharp';
 
-import { assert } from '../helpers/assert';
+import { assert } from '../helpers/assert.js';
 import {
   createTexture,
   floatToUint8Array,
   Texture,
   uint8ToFloatArray
-} from '../Texture';
+} from '../Texture.js';
 
 export async function readTexture(inputPath: string) {
   // Read the image

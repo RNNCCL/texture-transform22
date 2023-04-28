@@ -25,7 +25,8 @@
   },
   "scripts": {
     "build": "npm run build --workspaces",
-    "start": "npm run start --workspace=packages/cli",
+    "start:cli": "npm run start --workspace=packages/cli",
+    "start:viewer": "npm run start --workspace=packages/viewer",
     "format": "prettier \"packages/*/{src,glsl}/**/*.{ts,tsx,json,glsl}\" --check --write && eslint \"packages/**/*.{ts,tsx}\" --fix"
   },
   "workspaces": [
